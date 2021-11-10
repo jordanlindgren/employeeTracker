@@ -1,0 +1,19 @@
+{
+  "name": "employeetracker",
+  "version": "1.0.0",
+  "description": "command line tool to manage employee database",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jordanlindgren/employeeTracker.git"
+  },
+  "author": "jordan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jordanlindgren/employeeTracker/issues"
+  },
+  "homepage": "https://github.com/jordanlindgren/employeeTracker#readme"
+}
