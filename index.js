@@ -157,7 +157,7 @@ function displayActionMenu() {
       let response = await inquirer.prompt(departmentNamePrompt);
 
       const sql =
-        "INSERT INTO employees (first_name, last_name, role_id) VALUES (?,?,?)";
+        "INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)";
 
       const params = [response.name];
 
@@ -165,6 +165,7 @@ function displayActionMenu() {
         response.first_name,
         response.last_name,
         response.role_id,
+        response.manager_id,
       ]);
       console.log(`Added ${response} to the Database`);
     } else if (ans.action === ACTIONS.listEmployees) {
