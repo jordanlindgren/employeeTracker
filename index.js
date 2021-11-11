@@ -119,6 +119,64 @@ function displayActionMenu() {
           console.table(data);
         }
       );
+    } else if (ans.action === ACTIONS.addEmployees) {
+      const departmentNamePrompt = [
+        {
+          name: "first_name",
+          message: "Enter First Name",
+          type: "input",
+        },
+        {
+          name: "last_name",
+          message: "Enter Last Name",
+          type: "input",
+        },
+
+        {
+          name: "role_id",
+          message: "Enter Role Id",
+          type: "list",
+          choices: [
+            { name: "cleaner", value: 1 },
+            { name: "worker", value: 2 },
+            { name: "banker", value: 3 },
+          ],
+        },
+        {
+          name: "manager_id",
+          message: "Enter manager Id",
+          type: "list",
+          choices: [
+            { name: "", value: 1 },
+            { name: "", value: 2 },
+            { name: "", value: 3 },
+          ],
+        },
+      ];
+
+      let response = await inquirer.prompt(departmentNamePrompt);
+
+      const sql =
+        "INSERT INTO employees (first_name, last_name, role_id) VALUES (?,?,?)";
+
+      const params = [response.name];
+
+      await conn.query(sql, [
+        response.first_name,
+        response.last_name,
+        response.role_id,
+      ]);
+      console.log(`Added ${response} to the Database`);
+    } else if (ans.action === ACTIONS.listEmployees) {
+      // execute a SQL SELECT statement on the departments table
+      const sql = "SELECT * FROM employees";
+
+      let [results] = await conn.query(sql);
+      // let queryResults =  await db.query(sql);
+      // let results = queryResults[0]
+
+      // Display the query results to the console
+      console.table(results);
     } else {
       conn.end();
       process.exit(0);
