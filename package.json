@@ -4,6 +4,7 @@
   "description": "command line tool to manage employee database",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/jordanlindgren/employeeTracker/issues"
   },
-  "homepage": "https://github.com/jordanlindgren/employeeTracker#readme"
+  "homepage": "https://github.com/jordanlindgren/employeeTracker#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^8.2.0",
+    "mysql2": "^2.3.3-rc.0"
+  }
 }

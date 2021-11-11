@@ -1,1 +1,131 @@
-const mysql = require("mysql2");
+const mysql = require("mysql2/promise");
+const inquirer = require("inquirer");
+require("console.table");
+
+const ACTIONS = {
+  listDepartments: 1,
+  listRoles: 2,
+  listEmployees: 3,
+  addDepartment: 4,
+  addRoles: 5,
+  addEmployees: 6,
+};
+let conn;
+
+async function addConnection() {
+  conn = await mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "root",
+    database: "employeetracker",
+  });
+  displayActionMenu();
+}
+
+const questions = [
+  {
+    name: "action",
+    message: "select action",
+    type: "list",
+    choices: [
+      { name: "View All Departments", value: ACTIONS.listDepartments },
+      { name: "View All Roles", value: ACTIONS.listRoles },
+      { name: "View All Employees", value: ACTIONS.listEmployees },
+      { name: "Add Department", value: ACTIONS.addDepartment },
+      { name: "Add Roles", value: ACTIONS.addRoles },
+      { name: "Add Employees", value: ACTIONS.addEmployees },
+      { name: "Exit App", value: 1000 },
+    ],
+  },
+];
+
+function displayActionMenu() {
+  inquirer.prompt(questions).then(async (ans) => {
+    // connect to the employeetracer database
+
+    if (ans.action === ACTIONS.listDepartments) {
+      // execute a SQL SELECT statement on the departments table
+      const sql = "SELECT id, name FROM departments";
+
+      let [results] = await conn.query(sql);
+      // let queryResults =  await db.query(sql);
+      // let results = queryResults[0]
+
+      // Display the query results to the console
+      console.table(results);
+    } else if (ans.action === ACTIONS.addDepartment) {
+      const departmentNamePrompt = {
+        name: "name",
+        message: "Enter name of Department",
+        type: "input",
+      };
+
+      let response = await inquirer.prompt(departmentNamePrompt);
+
+      const sql = "INSERT INTO departments (name) VALUES (?)";
+
+      const params = [response.name];
+
+      await conn.query(sql, params);
+      console.log(`Added ${response.name} to the Database`);
+    } else if (ans.action === ACTIONS.listRoles) {
+      // execute a SQL SELECT statement on the departments table
+      const sql = "SELECT * FROM roles";
+
+      let [results] = await conn.query(sql);
+      // let queryResults =  await db.query(sql);
+      // let results = queryResults[0]
+
+      // Display the query results to the console
+      console.table(results);
+    } else if (ans.action === ACTIONS.addRoles) {
+      const departmentNamePrompt = [
+        {
+          name: "job_title",
+          message: "Enter Job",
+          type: "input",
+        },
+
+        {
+          name: "department_id",
+          message: "Enter Department Id",
+          type: "list",
+          choices: [
+            { name: "quality assurance", value: 1 },
+            { name: "destruction", value: 2 },
+            { name: "money", value: 3 },
+          ],
+        },
+        {
+          name: "salary",
+          message: "Enter Salary",
+          type: "input",
+        },
+      ];
+
+      let response = await inquirer.prompt(departmentNamePrompt);
+
+      const sql =
+        "INSERT INTO roles (job_title, department_id, salary) VALUES (?,?,?)";
+
+      const params = [response.name];
+
+      // await
+      conn.query(
+        sql,
+        [response.job_title, response.department_id, response.salary],
+        function (err, data) {
+          if (err) throw err;
+          console.table(data);
+        }
+      );
+    } else {
+      conn.end();
+      process.exit(0);
+    }
+
+    displayActionMenu();
+  });
+}
+
+addConnection();
